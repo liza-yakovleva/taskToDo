@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {OverlayTrigger}  from 'react-bootstrap'
-import {renderTooltipAllTasks, renderTooltipDoneTask}  from '../../Common/settings'
+import {renderTooltipAllTasks, renderTooltipDoneTask,renderTooltipImportantTask,renderTooltipWillDoTask}  from '../../Common/settings'
 
 import './filter.css'
 
@@ -11,7 +11,9 @@ class Filter extends Component {
 
 	buttons = [
 		{ name: 'all', label: 'Все' },
-		{ name: 'done', label: 'Сделано' }
+		{ name: 'done', label: 'Сделано' },
+		{ name: 'willDo', label: 'Сделаю' },
+		{ name: 'important', label: 'Важные' }
 	]
 
 	render() {
@@ -24,7 +26,12 @@ class Filter extends Component {
 				<OverlayTrigger
     placement="bottom"
     delay={{ show: 250, hide: 400 }}
-    overlay={name==='all' ? renderTooltipAllTasks : renderTooltipDoneTask}
+					overlay={name === 'all' ? renderTooltipAllTasks
+						: name === 'done' ? renderTooltipDoneTask
+							: name === 'important' ? renderTooltipImportantTask
+								: renderTooltipWillDoTask
+							
+	}
   >
 
 				<button

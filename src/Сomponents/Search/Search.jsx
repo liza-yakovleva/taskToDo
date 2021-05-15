@@ -3,14 +3,10 @@ import {OverlayTrigger}  from 'react-bootstrap'
 import {renderTooltipInputTasks}  from '../../Common/settings'
 
 import './search.css'
-
-
-
-
  class Search extends Component {
 
 	handleSearch = (e) => {
-		this.props.onSearchPosts(e.target.value)
+		this.props.handleSearchTasks(e.target.value)
 	}
 
 	render() {

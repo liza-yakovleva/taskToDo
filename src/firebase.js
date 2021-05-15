@@ -1,7 +1,9 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/firebase-database'
+import 'firebase/firebase-auth'
 
 const config = {
-apiKey: "AIzaSyAVUXt93LVrzZuV-kI4MFqxf7ldmGPl3_Q",
+  apiKey: "AIzaSyAVUXt93LVrzZuV-kI4MFqxf7ldmGPl3_Q",
   authDomain: "taskstodolist-5eb01.firebaseapp.com",
   databaseURL: "https://taskstodolist-5eb01-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "taskstodolist-5eb01",
