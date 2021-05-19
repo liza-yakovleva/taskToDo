@@ -1,0 +1,36 @@
+.contact-us-form{
+  display: flex;
+  flex-direction: column;
+color:rgb(255, 255, 255);
+margin: 0 auto;
+justify-content: space-between;
+height: 730px;
+width: 100%;
+text-transform: uppercase;
+}
+.author,
+.text-area,
+.email {
+  width: 100% !important;
+ 
+}
+
+.contact-us-form input::placeholder,
+.contact-us-form textarea::placeholder {
+  color: rgb(0, 0, 0);
+ 
+}
+.text-area{
+  height: 420px;
+}
+button {
+  width: 200px;
+  height: 40px;
+border-radius: 20px;
+border: none;
+
+}
+button:hover{
+ color:rgb(255, 255, 255);
+  background-color: coral;
+}

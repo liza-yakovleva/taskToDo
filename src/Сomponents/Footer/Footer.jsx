@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="container">
           <div className="d-flex justify-content-center">
           <span  className="text-muted">
-              © 2021 Lizabet Yakovleva, Inc.
+              © 2021 Yakovleva Eizaveta, Inc.
           </span>
             </div>
         </div>

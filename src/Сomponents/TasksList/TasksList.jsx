@@ -7,7 +7,7 @@ const TasksList = ({visibleTasks, handleDelete, handleToggleStatus })=> {
 		return (<div> Минуточку ... Ждем данные с сервера!</div>)
 	}
 	else {
-console.log(visibleTasks);
+
 
 		return (
 			<ul className='app-list list-group'>

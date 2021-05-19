@@ -10,8 +10,12 @@ import SignIn from '../Сomponents/SignIn/SignIn.jsx'
 import SignUp from '../Сomponents/SignUp/SignUp.jsx'
 import ContactUs from '../Сomponents/ContactUs/ContactUs.jsx'
 
-import 'firebase/firebase-database'
+
+import firebase from 'firebase/app'
 import 'firebase/firebase-auth'
+
+
+
 import { database } from '../firebase'
 import {Route} from "react-router-dom"
 
@@ -23,28 +27,81 @@ class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			data:[{ label: 'Ваше задание', important: true, done: false, id: '0' }],
+			// tasksDefault:[{ label: 'Ваше задание', important: true, done: false, id: '0' }],
+			renderTasksUser:[{ label: 'Ваше задание', important: true, done: false, id: '0' }],
 			rootPartPath: '0/',
 			searchTaskLetter: '',
-			filter: 'all'
+			filter: 'all',
+			userName: "",
 		}
 	}
 	
 	componentDidMount() {
+		firebase.auth().onAuthStateChanged(user => {
+			if (user) {
+		this.setState({
+			userLoginInEmail: user.email,
+			userName:user.email.substring(0,(user.email.indexOf("@")))
+		})
+			} else {
+				this.setState({
+				userLoginInEmail:""
+			})
+			}
+		})
+
+
 		database.ref('/0/tasks').on('value', (snapshot) => {
 			this.setState({
-				data: snapshot.val()
+				tasksDefault: snapshot.val()
 			})
 		})
+
+		setTimeout(() => {
+			console.log(this.state.userName)
+			console.log(`1/users/${this.state.userName}`)
+			
+			this.state.userName ?
+			database.ref(`1/users/${this.state.userName}`).on('value', (snapshot) => {this.setState({
+				tasksUser: snapshot.val()
+			})
+			})
+				:
+				this.setState({
+					tasksUser:this.state.tasksDefault
+				})
+				
+		}, 400)
+				
+		
+
+	setTimeout(() => {
+			// console.log(this.state.tasksUser)
+			console.log(this.state.allUsers)
+			// console.log(this.state.tasksDefault)
+			// console.log(this.state.tasksUser.length)
+			if (this.state.tasksUser) {
+				this.setState({renderTasksUser: this.state.tasksUser })
+					}
+			 else {
+				this.setState({ 
+				renderTasksUser: this.state.tasksDefault }
+				)
+				}
+			}
+		, 700)
+		console.log(this.state.RenderTasksUser)
+
+
 	}
 	
 	handleDelete = (id) => {
 		this.setState(
-			({ data }) => {
-				const index = data.findIndex(item => item.id === id)
-				const newData = [...data.slice(0, index), ...data.slice(index + 1)]
+			({ renderTasksUser }) => {
+				const index = renderTasksUser.findIndex(item => item.id === id)
+				const newData = [...renderTasksUser.slice(0, index), ...renderTasksUser.slice(index + 1)]
 				return {
-					data: newData
+					renderTasksUser: newData
 				}
 			})
 	}
@@ -53,12 +110,12 @@ class App extends Component {
 		const newTask = {
 			label: task,
 			important: false,
-			id: this.state.data ? this.state.data.length + 1 : 0
+			id: this.state.renderTasksUser ? this.state.renderTasksUser.length + 1 : 0
 		}
 		this.setState(
-			({ data }) => {
-				const newArrTasks = [...data, newTask]
-				return { data: newArrTasks }
+			({ renderTasksUser }) => {
+				const newArrTasks = [...renderTasksUser, newTask]
+				return { renderTasksUser: newArrTasks }
 			}
 		)
 	}
@@ -98,13 +155,13 @@ class App extends Component {
 
 	handleToggleStatus = (id, selector) => {
 		this.setState(
-			({ data }) => {
-				const index = data.findIndex(item => item.id === id);
-				const oldItem = data[index];
+			({ renderTasksUser }) => {
+				const index = renderTasksUser.findIndex(item => item.id === id);
+				const oldItem = renderTasksUser[index];
 				const newItem = { ...oldItem, [selector]: !oldItem[selector] };
-				const newData = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+				const newData = [...renderTasksUser.slice(0, index), newItem, ...renderTasksUser.slice(index + 1)];
 				return {
-					data: newData
+					renderTasksUser: newData
 				}
 			}
 		)
@@ -112,19 +169,19 @@ class App extends Component {
 
 	render() {
 		const
-			{ data, searchTaskLetter, filter } = this.state,
-			  allTasks = data.length,
-				doneTasks = data.filter(i => i.done).length,
-			  visibleTasks =this.filterTasks(this.searchTask(data, searchTaskLetter), filter),
-		    importantTasks=data.filter(i => i.important).length,
-		    willDoTasks=data.filter(i => i.done===false).length
-	// console.log(data)
+			{ renderTasksUser, searchTaskLetter, filter } = this.state,
+			  allTasks = renderTasksUser.length,
+				doneTasks = renderTasksUser.filter(i => i.done).length,
+			  visibleTasks =this.filterTasks(this.searchTask(renderTasksUser, searchTaskLetter), filter),
+		    importantTasks=renderTasksUser.filter(i => i.important).length,
+		    willDoTasks=renderTasksUser.filter(i => i.done===false).length
+	// console.log(renderTasksUser)
 		
-		if (data) {
+		if (renderTasksUser) {
 			return (
 				
 				<>
-					<Route path="/" render={() => <Header
+					<Route path="/" render={() => <Header visibleTasks={visibleTasks}
 					/>} />
 					<div className='app'>
 						
